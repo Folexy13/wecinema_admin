@@ -19,7 +19,7 @@ const connectDB = require('./config/db');
 
 dotenv.config();
 
-// Norgan
+// Morgan
 app.use(morgan('tiny'));
 
 // Connect to DB

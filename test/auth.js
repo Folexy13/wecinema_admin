@@ -14,7 +14,7 @@ describe('AUTH API', () => {
   describe('POST /api/auth/register', () => {
     it('It should register a user', (done) => {
       const registrationData = {
-        name: 'Onasanya tunde',
+        name: 'Aluko Opeyemi F.',
         email: 'onsas@gmail.com',
         password: 'testing',
         role: 'admin'
@@ -33,7 +33,7 @@ describe('AUTH API', () => {
   describe('POST /api/auth/register', () => {
     it('It should {not register} a user', (done) => {
       const registrationData = {
-        name: 'Onasanya tunde',
+        name: 'Aluko Opeyemi F.',
         email: 'onasanysss@gmail.com',
         password: 'testing',
         role: 'admin'

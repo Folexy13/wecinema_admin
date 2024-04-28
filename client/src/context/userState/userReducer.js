@@ -24,6 +24,30 @@ export default (state, action) => {
         loading: false,
         me: action.payload
       };
+    case types.GET_VIDEOS:
+      return {
+        ...state,
+        loading: false,
+        videos: action.payload,
+        error: false,
+        errResponse: ''
+      };
+    case types.GET_TEACHERS:
+      return {
+        ...state,
+        loading: false,
+        staffs: action.payload,
+        error: false,
+        errResponse: ''
+      };
+    case types.GET_SCRIPTS:
+      return {
+        ...state,
+        loading: false,
+        scripts: action.payload,
+        error: false,
+        errResponse: ''
+      };
     case types.GET_USER:
       return {
         ...state,
@@ -36,6 +60,15 @@ export default (state, action) => {
       return {
         ...state,
         users: [action.payload, ...state.users],
+        loading: false,
+        error: false,
+        errResponse: '',
+        message: 'Add success'
+      };
+    case types.VIDEO_ADD:
+      return {
+        ...state,
+        users: [action.payload, ...state.videos],
         loading: false,
         error: false,
         errResponse: '',

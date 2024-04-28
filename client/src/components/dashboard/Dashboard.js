@@ -9,11 +9,10 @@ const { Title } = Typography;
 const index = '1';
 function Dashboard() {
   const { state } = useContext(UserContext);
-  const { users, usersByMonth, error, loading } = state;
+  const { users, videos, staffs, scripts, usersByMonth, loading } = state;
   const [userObj, setuserObj] = useState();
   const [lineData, setLineData] = useState();
   const [doughnutStateData, setdoughnutStateData] = useState();
-
   const lineStatsData = {
     labels: [],
     datasets: [
@@ -42,7 +41,7 @@ function Dashboard() {
   };
 
   const DoughnutData = {
-    labels: ['Active', 'Inactive'],
+    labels: ['Staff', 'Student'],
     datasets: [
       {
         data: [],
@@ -53,23 +52,21 @@ function Dashboard() {
     ]
   };
 
-  const getUsersData = () => {
+  const getAdminsData = () => {
     const activeUsers = users
       ? users.filter((user) => user.isActive === true).length
       : 0;
-    const totalStaffs = users
-      ? users.filter((user) => user.role === 'staff').length
-      : 0;
 
-    const inActiveUsers = users ? users.length - activeUsers : 0;
+    // console.log(state);
+    const StudentUsers = videos ? videos.length : 0;
     const userObj = [
+      { name: 'Total Scripts', stats: scripts ? scripts.length : 0 },
+      { name: 'Total Videos', stats: videos ? videos.length : 0 },
       { name: 'Total Users', stats: users ? users.length : 0 },
-      { name: 'Active Users', stats: activeUsers },
-      { name: 'Total Staffs', stats: totalStaffs },
-      { name: 'Total inactive users', stats: inActiveUsers }
+      { name: 'Admins', stats: users ? users.length : 0 }
     ];
     DoughnutData.datasets[0].data.push(activeUsers);
-    DoughnutData.datasets[0].data.push(inActiveUsers);
+    DoughnutData.datasets[0].data.push(StudentUsers);
     setdoughnutStateData(DoughnutData);
 
     return userObj;
@@ -93,8 +90,9 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    setuserObj(getUsersData());
-  }, [users]);
+    // alert(JSON.stringify(students));
+    setuserObj(getAdminsData());
+  }, [scripts, staffs, videos, users]);
 
   useEffect(() => {
     arrangeUserStats();
@@ -114,7 +112,7 @@ function Dashboard() {
         </div>
 
         <div className="col-md-4 ">
-          <Card title="Active Vs Inactive ">
+          <Card title="Staff Vs Student ">
             {doughnutStateData ? (
               <>
                 <Spin spinning={loading}>

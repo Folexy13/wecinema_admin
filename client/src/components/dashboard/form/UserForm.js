@@ -23,23 +23,23 @@ function UserForm({ user, onFinish, changePasswordModal, loading }) {
         <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
           <Col span={12}>
             <Form.Item
-              name="name"
-              label="Full Name"
+              name="username"
+              label="Username"
               rules={[
                 {
                   required: true,
-                  message: 'Please input full name!'
+                  message: 'Please input username!'
                 }
               ]}
             >
               <Input
                 prefix={<UserOutlined className="site-form-item-icon" />}
-                placeholder="John Doe"
+                placeholder="Folexy13"
               />
             </Form.Item>
           </Col>
           <Col span={12}>
-            {user.role !== 'admin' ? (
+            {user?.role !== 'admin' ? (
               <Form.Item
                 label={
                   user ? (
@@ -106,29 +106,28 @@ function UserForm({ user, onFinish, changePasswordModal, loading }) {
               />
             </Form.Item>
           </Col>
-          {user.role !== 'admin' && (
-            <Col span={12}>
-              <Form.Item
-                label="Role"
-                name="role"
-                rules={[
-                  {
-                    required: false,
-                    message: 'Pick a role!'
-                  }
-                ]}
-              >
-                <Select defaultValue={user ? user.role : 'member'}>
-                  <Select.Option value="member">Member</Select.Option>
-                  <Select.Option value="staff">Staff</Select.Option>
-                </Select>
-              </Form.Item>
-            </Col>
-          )}
+          <Col span={12}>
+            <Form.Item
+              name="dob"
+              label="Date Of Birth"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input date of birth!'
+                }
+              ]}
+            >
+              <Input
+                prefix={<UserOutlined className="site-form-item-icon" />}
+                placeholder="dd-mm-yyyy"
+                type="date"
+              />
+            </Form.Item>
+          </Col>
         </Row>
 
-        <Form.Item label="Active Status" name="isActive">
-          <Switch defaultChecked={user ? user.isActive : false} />
+        <Form.Item label="Active Status" name="status">
+          <Switch defaultChecked={user ? user?.status : true} />
         </Form.Item>
 
         <Form.Item>

@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-const mernDashApi = axios.create({});
+const adminApi = axios.create({});
 
-mernDashApi.interceptors.request.use(function (config) {
+adminApi.interceptors.request.use(function (config) {
   console.log('Request Sent');
   const token = localStorage.getItem('mern_admin_dashboard');
 
@@ -13,4 +13,4 @@ mernDashApi.interceptors.request.use(function (config) {
   return config;
 });
 
-export default mernDashApi;
+export default adminApi;

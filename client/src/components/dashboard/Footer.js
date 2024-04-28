@@ -13,11 +13,11 @@ function CustomFooter() {
           rel="noopener noreferrer"
           target="_blank"
         >
-          Onasanya Babatunde
+          Aluko Opeyemi F.
         </a>
         |
         <a
-          href="https://github.com/rammyblog/MERN-Admin-Dashboard"
+          href="https://github.com/folexy13/"
           rel="noopener noreferrer"
           target="_blank"
         >

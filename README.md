@@ -64,7 +64,7 @@ If you find an issue running this project please send in a PR.
 
 ## Author
 
-👤 **Onasanya Tunde**
+👤 **Aluko Opeyemi F.**
 
 - Website: https://onasanyatunde.dev
 - Twitter: [@simply_rammy](https://twitter.com/simply_rammy)

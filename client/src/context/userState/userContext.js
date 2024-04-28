@@ -6,12 +6,15 @@ import React, {
 } from 'react';
 import userReducer from './userReducer';
 import * as types from './userActionTypes';
-import mernDashApi from '../../helpers/apiUtils';
+import adminApi from '../../helpers/apiUtils';
+import axios from 'axios';
 
 const initialUserState = {
   loading: false,
   error: false,
   users: '',
+  videos: '',
+  scripts: '',
   user: null,
   me: null,
   usersByMonth: null,
@@ -20,6 +23,8 @@ const initialUserState = {
 };
 
 export const UserContext = createContext(initialUserState);
+
+export const BE_API = 'https://wecinema.onrender.com'; //'https://pcgs.onrender.com';
 
 export const UserProvider = ({ children }) => {
   //   const BASE_AUTH_URL = process.env.API_BASE_URL + "api/"
@@ -30,16 +35,117 @@ export const UserProvider = ({ children }) => {
       type: types.USER_RESET
     });
   };
+  const fetchVideos = useCallback(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(BE_API + '/video/all');
+        dispatch({
+          type: types.GET_VIDEOS,
+          payload: response.data
+        });
+      } catch (error) {
+        console.error('Error fetching students:', error);
+        dispatch({
+          type: types.USER_FAILURE,
+          payload: error.response
+            ? error.response.data.error_msg
+            : 'An error occurred while fetching students'
+        });
+      }
+    };
+
+    fetchData(); // Invoke the fetchData function immediately
+  }, [dispatch]); // Include 'dispatch' as a dependency
+
+  const changeUserStatus = useCallback(
+    (userId, status) => {
+      const fetchData = async () => {
+        try {
+          await axios.post(BE_API + '/user/change-user-status', {
+            userId,
+            status
+          });
+          const res = await axios.get(BE_API + '/user');
+          dispatch({
+            type: types.USER_SUCCESS,
+            payload: res.data
+          });
+        } catch (error) {
+          console.error('Error updating user status:', error);
+          dispatch({
+            type: types.USER_FAILURE,
+            payload: error.response
+              ? error.response.data.error_msg
+              : 'An error occurred while updating user status'
+          });
+        }
+      };
+
+      fetchData(); // Invoke the fetchData function immediately
+    },
+    [dispatch]
+  ); // Include 'dispatch' as a dependency
+
+  const changeVideoStatus = useCallback(
+    (videoId, status) => {
+      const fetchData = async () => {
+        try {
+          await axios.post(BE_API + '/video/change-video-status', {
+            videoId,
+            status
+          });
+          const res = await axios.get(BE_API + '/video/all');
+          dispatch({
+            type: types.GET_VIDEOS,
+            payload: res.data
+          });
+        } catch (error) {
+          console.error('Error updating video status:', error);
+          dispatch({
+            type: types.USER_FAILURE,
+            payload: error.response
+              ? error.response.data.error_msg
+              : 'An error occurred while updating user status'
+          });
+        }
+      };
+
+      fetchData(); // Invoke the fetchData function immediately
+    },
+    [dispatch]
+  );
+  const fetchScripts = useCallback(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(BE_API + '/video/author/scripts');
+        // console.log(response);
+        dispatch({
+          type: types.GET_SCRIPTS,
+          payload: response.data
+        });
+      } catch (error) {
+        console.error('Error fetching results:', error);
+        dispatch({
+          type: types.USER_FAILURE,
+          payload: error.response
+            ? error.response.data.error_msg
+            : 'An error occurred while fetching results'
+        });
+      }
+    };
+
+    fetchData(); // Invoke the fetchData function immediately
+  }, [dispatch]); // Include 'dispatch' as a dependency
 
   const fetchUsers = useCallback(async () => {
     dispatch({
       type: types.USER_START
     });
     try {
-      const res = await mernDashApi.get('/api/user/');
+      const res = await axios.get(BE_API + '/user');
       dispatch({
         type: types.USER_SUCCESS,
-        payload: res.data.data
+        payload: res.data
       });
     } catch (error) {
       dispatch({
@@ -54,7 +160,7 @@ export const UserProvider = ({ children }) => {
       type: types.USER_START
     });
     try {
-      const res = await mernDashApi.get('/api/user/me');
+      const res = await adminApi.get('/api/user/me');
       dispatch({
         type: types.GET_LOGGED_IN_USER,
         payload: res.data.data
@@ -62,7 +168,7 @@ export const UserProvider = ({ children }) => {
     } catch (error) {
       dispatch({
         type: types.USER_FAILURE,
-        payload: error.response.data.error_msg
+        payload: error?.response?.data?.error_msg
       });
     }
   }, []);
@@ -72,7 +178,7 @@ export const UserProvider = ({ children }) => {
       type: types.USER_START
     });
     try {
-      const res = await mernDashApi.post('/api/auth/register', data);
+      const res = await axios.post(BE_API + '/user/register', data);
       dispatch({
         type: types.USER_ADD,
         payload: res.data.data
@@ -80,7 +186,36 @@ export const UserProvider = ({ children }) => {
     } catch (error) {
       dispatch({
         type: types.USER_FAILURE,
-        payload: error.response.data.error_msg
+        payload: error.response.data.error
+      });
+    }
+  }, []);
+
+  const addVideo = useCallback(async (data) => {
+    try {
+      const res = await axios.post(BE_API + '/video/create', data);
+      dispatch({
+        type: types.VIDEO_ADD,
+        payload: res.data.data
+      });
+    } catch (error) {
+      dispatch({
+        type: types.USER_FAILURE,
+        payload: error.response.data.error
+      });
+    }
+  }, []);
+  const addScript = useCallback(async (data) => {
+    try {
+      const res = await axios.post(BE_API + '/video/scripts', data);
+      dispatch({
+        type: types.VIDEO_ADD,
+        payload: res.data.data
+      });
+    } catch (error) {
+      dispatch({
+        type: types.USER_FAILURE,
+        payload: error.response.data.error
       });
     }
   }, []);
@@ -90,7 +225,7 @@ export const UserProvider = ({ children }) => {
       type: types.USER_START
     });
     try {
-      const res = await mernDashApi.get('/api/user/group/group-by-month');
+      const res = await adminApi.get('/api/user/group/group-by-month');
       dispatch({
         type: types.GET_USERS_BY_MONTH,
         payload: res.data
@@ -110,10 +245,10 @@ export const UserProvider = ({ children }) => {
     const tempState = { ...state };
     if (!tempState.users) {
       try {
-        const res = await mernDashApi.get(`/api/user/single/${id}`);
+        const res = await axios.get(BE_API + '/user/' + id);
         dispatch({
           type: types.GET_USER,
-          payload: res.data.data
+          payload: res.data
         });
       } catch (error) {
         dispatch({
@@ -135,7 +270,7 @@ export const UserProvider = ({ children }) => {
       type: types.USER_START
     });
     try {
-      const res = await mernDashApi.patch('/api/user/edit-user', data);
+      const res = await adminApi.patch('/api/user/edit-user', data);
       dispatch({
         type: types.USER_EDIT,
         payload: res.data.data
@@ -153,7 +288,7 @@ export const UserProvider = ({ children }) => {
       type: types.USER_START
     });
     try {
-      // await mernDashApi.post(`/api/user/delete/${id}`);
+      // await adminApi.post(`/api/user/delete/${id}`);
       console.log(id);
       dispatch({
         type: types.USER_DELETE,
@@ -172,7 +307,7 @@ export const UserProvider = ({ children }) => {
       type: types.USER_START
     });
     try {
-      await mernDashApi.post('/api/auth/change-password', data);
+      await adminApi.post('/api/auth/change-password', data);
       dispatch({
         type: types.USER_PASSWORD_CHANGE
       });
@@ -188,6 +323,9 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     fetchLoggedInUser();
     fetchUsers();
+    // fetchStaffs();
+    fetchVideos();
+    fetchScripts();
     fetchUsersByMonth();
   }, []);
 
@@ -196,12 +334,19 @@ export const UserProvider = ({ children }) => {
       value={{
         state,
         fetchSingleUser,
+        // fetchStaffs,
+        fetchScripts,
         fetchUsersByMonth,
         editUserAction,
         changeUserPasswordAction,
         addUser,
+        addVideo,
         deleteUserAction,
-        UserReset
+        changeUserStatus,
+        changeVideoStatus,
+        fetchVideos,
+        UserReset,
+        addScript
       }}
     >
       {children}

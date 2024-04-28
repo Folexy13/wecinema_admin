@@ -1,6 +1,12 @@
 import React from 'react';
 import { Layout, Menu, Typography } from 'antd';
-import { UserOutlined, HomeOutlined, SettingOutlined } from '@ant-design/icons';
+import {
+  UserOutlined,
+  HomeOutlined,
+  SettingOutlined,
+  PlayCircleOutlined,
+  FullscreenExitOutlined
+} from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import SidebarStyled from './SidebarStyled';
 
@@ -22,7 +28,7 @@ function Sidebar({ collapsed, index, loggedInUserId }) {
         // }}
       >
         <div className="logo">
-          <Title level={2}>MERN DASH</Title>
+          <Title level={2}>Admin Dash</Title>
         </div>
         <Menu
           theme="dark"
@@ -40,7 +46,17 @@ function Sidebar({ collapsed, index, loggedInUserId }) {
               Users
             </Link>
           </Menu.Item>
-          <Menu.Item key="3" icon={<SettingOutlined />}>
+          <Menu.Item key="3" icon={<PlayCircleOutlined />}>
+            <Link className="text-white" to="/dashboard/videos">
+              Videos
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="4" icon={<FullscreenExitOutlined />}>
+            <Link className="text-white" to="/dashboard/scripts">
+              Scripts
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="5" icon={<SettingOutlined />}>
             <Link to={`/dashboard/user/${loggedInUserId}`}></Link>
             Account Settings
           </Menu.Item>

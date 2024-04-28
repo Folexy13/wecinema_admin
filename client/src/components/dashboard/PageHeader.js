@@ -48,7 +48,7 @@ function PageHeader({ collapsed, toggle, history }) {
                 <Avatar icon={<UserOutlined />} />
               </a>
             </Dropdown>
-            <span className="name">Onasanya Tunde</span>
+            <span className="name">Aluko Opeyemi F.</span>
           </div>
         </div>
       </Header>

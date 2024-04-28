@@ -35,9 +35,9 @@ const getSingleUserService = async (query) => {
   }
 };
 
-const getUsers = async (query) => {
+const getAdmins = async (query) => {
   try {
-    const users = await User.find(query).find({ role: ['member', 'staff'] });
+    const users = await User.find(query);
     return users;
   } catch (err) {
     throw Error(err);
@@ -55,7 +55,7 @@ const getActiveUsers = async (query) => {
 
 module.exports = {
   getUser,
-  getUsers,
+  getAdmins,
   getActiveUsers,
   getSingleUserService,
   getAndEditUser
