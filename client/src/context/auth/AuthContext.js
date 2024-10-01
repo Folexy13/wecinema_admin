@@ -1,7 +1,8 @@
 import React, { createContext, useReducer, useCallback } from 'react';
 import userReducer from './AuthReducer';
-import axios from 'axios';
 import * as types from './authActionTypes';
+import * as userTypes from '../userState/userActionTypes';
+import adminApi from '../../helpers/apiUtils';
 
 const initialAuthState = {
   loading: false,
@@ -26,11 +27,17 @@ export const AuthProvider = ({ children }) => {
       type: types.AUTH_START
     });
     try {
-      const res = await axios.post('/api/auth/login', data);
+      const res = await adminApi.post('/api/auth/login', data);
+      const resp = await adminApi.get('/api/user/me');
+
       localStorage.setItem('mern_admin_dashboard', res.data.access_token);
       dispatch({
         type: types.AUTH_SUCCESS,
         payload: res.data.access_token
+      });
+      dispatch({
+        type: userTypes.GET_LOGGED_IN_USER,
+        payload: resp.data.data
       });
     } catch (error) {
       dispatch({

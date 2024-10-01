@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Layout, Badge, Menu, Dropdown } from 'antd';
 import {
   MenuUnfoldOutlined,
@@ -7,11 +7,14 @@ import {
   UserOutlined
 } from '@ant-design/icons';
 import HeaderStyled from './HeaderStyled';
+import { UserContext } from '../../context/userState/userContext';
 import Avatar from 'antd/lib/avatar/avatar';
 
 const { Header } = Layout;
 
 function PageHeader({ collapsed, toggle, history }) {
+  const { state } = useContext(UserContext);
+  const { me: loggedInUser } = state;
   const handleLogout = () => {
     localStorage.removeItem('mern_admin_dashboard');
     history.push('/user/login');
@@ -48,7 +51,7 @@ function PageHeader({ collapsed, toggle, history }) {
                 <Avatar icon={<UserOutlined />} />
               </a>
             </Dropdown>
-            <span className="name">Aluko Opeyemi F.</span>
+            <span className="name">{loggedInUser.name}</span>
           </div>
         </div>
       </Header>

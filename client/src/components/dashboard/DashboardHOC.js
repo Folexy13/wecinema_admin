@@ -19,6 +19,7 @@ function DashboardHOC(Component, index) {
       message: userMessage,
       me: loggedInUser
     } = state;
+    // console.log(state);
     useEffect(() => {
       if (error) {
         message.error(errResponse);

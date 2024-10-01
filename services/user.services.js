@@ -27,6 +27,7 @@ const getAndEditUser = async (query, newData) => {
 };
 
 const getSingleUserService = async (query) => {
+  // console.log(query);
   try {
     const user = await User.findOne(query).select('+password');
     return user;
