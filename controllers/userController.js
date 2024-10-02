@@ -1,5 +1,6 @@
 const {
   getUser,
+  getUsers,
   getAdmins,
   getActiveUsers,
   getSingleUserService,
@@ -22,7 +23,7 @@ const handleValidation = (body, res, type) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const totalUsers = await getAdmins({});
+    const totalUsers = await getUsers({});
 
     return res.status(200).json({ data: totalUsers });
   } catch (err) {
@@ -32,7 +33,7 @@ const getAllUsers = async (req, res) => {
 
 const getAllActiveUsers = async (req, res) => {
   try {
-    const users = await getActiveUsers({ isActive: true });
+    const users = await getActiveUsers({ status: true });
     return res.status(200).json({ data: users });
   } catch (err) {
     return res.status(400).json({ error_msg: err.message });

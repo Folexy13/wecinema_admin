@@ -18,6 +18,12 @@ export default (state, action) => {
         loading: false,
         users: action.payload
       };
+    case types.ADMIN_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        admins: action.payload
+      };
     case types.GET_LOGGED_IN_USER:
       return {
         ...state,

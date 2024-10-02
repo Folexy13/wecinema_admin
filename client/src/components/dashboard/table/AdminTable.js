@@ -8,7 +8,7 @@ import { UserContext } from '../../../context/userState/userContext';
 //   console.log('params', pagination, filters, sorter, extra);
 // }
 
-function UserTable({ data }) {
+function AdminTable({ data }) {
   const { changeUserStatus } = useContext(UserContext);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -36,14 +36,10 @@ function UserTable({ data }) {
       render: (text, record, index) => (currentPage - 1) * pageSize + index + 1,
       responsive: ['lg']
     },
+
     {
-      title: 'Date Of Birth',
-      dataIndex: 'dob',
-      responsive: ['lg']
-    },
-    {
-      title: 'Username',
-      dataIndex: 'username',
+      title: 'Name',
+      dataIndex: 'name',
       render: (text, record) => (
         <Link to={`/dashboard/user/${record._id}`}>{text}</Link>
       ),
@@ -58,10 +54,15 @@ function UserTable({ data }) {
       sortDirections: ['descend', 'ascend'],
       responsive: ['md']
     },
+    {
+      title: 'Account Created',
+      dataIndex: 'date',
+      responsive: ['lg']
+    },
 
     {
       title: 'Active',
-      dataIndex: 'status',
+      dataIndex: 'isActive',
       filters: [
         {
           text: 'Active',
@@ -72,10 +73,10 @@ function UserTable({ data }) {
           value: false
         }
       ],
-      onFilter: (value, record) => record.status === value,
+      onFilter: (value, record) => record.isActive === value,
       render: (_, record) => (
         <Switch
-          checked={record?.status}
+          checked={record?.isActive}
           loading={loading === record._id}
           disabled={loading}
           onChange={(checked) => handleSwitchChange(record._id, checked)}
@@ -83,9 +84,9 @@ function UserTable({ data }) {
       )
     }
   ];
-    const handleTableChange = (pagination) => {
-      setCurrentPage(pagination.current);
-    };
+  const handleTableChange = (pagination) => {
+    setCurrentPage(pagination.current);
+  };
   return (
     <>
       <Table
@@ -100,4 +101,4 @@ function UserTable({ data }) {
   );
 }
 
-export default UserTable;
+export default AdminTable;

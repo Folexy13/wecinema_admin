@@ -51,7 +51,7 @@ function PageHeader({ collapsed, toggle, history }) {
                 <Avatar icon={<UserOutlined />} />
               </a>
             </Dropdown>
-            <span className="name">{loggedInUser.name}</span>
+            <span className="name">{loggedInUser?.name}</span>
           </div>
         </div>
       </Header>

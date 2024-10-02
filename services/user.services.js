@@ -3,11 +3,19 @@ const User = require('../models/User');
 const getUser = async (query) => {
   try {
     const user = await User.findOne(query).select('+password');
-    if (!user || !user.isActive) {
+    if (!user || !user.status) {
       throw Error('User not found or not active');
     }
 
     return user;
+  } catch (err) {
+    throw Error(err);
+  }
+};
+const getUsers = async () => {
+  try {
+    const users = await User.find().select('+password');
+    return users;
   } catch (err) {
     throw Error(err);
   }
@@ -27,7 +35,6 @@ const getAndEditUser = async (query, newData) => {
 };
 
 const getSingleUserService = async (query) => {
-  // console.log(query);
   try {
     const user = await User.findOne(query).select('+password');
     return user;
@@ -59,5 +66,6 @@ module.exports = {
   getAdmins,
   getActiveUsers,
   getSingleUserService,
-  getAndEditUser
+  getAndEditUser,
+  getUsers
 };

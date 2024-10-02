@@ -2,7 +2,9 @@ import React from 'react';
 import { Route, Switch, Router } from 'react-router-dom';
 import Dashboard from './components/dashboard/Dashboard';
 import UserListPage from './components/dashboard/UserListPage';
+import AdminListPage from './components/dashboard/AdminListPage';
 import SingleUser from './components/dashboard/SingleUser/SingleUser';
+import SingleVideo from './components/dashboard/SingleVideo/SingleVideo';
 import LoginForm from './components/auth/Login';
 import checkAdminAuth from './helpers/AdminAuth';
 import AddNewUser from './components/dashboard/AddNewUser';
@@ -34,6 +36,11 @@ const BaseRoute = () => (
     <PrivateAdminRoute exact path="/dashboard/users" component={UserListPage} />
     <PrivateAdminRoute
       exact
+      path="/dashboard/admins"
+      component={AdminListPage}
+    />
+    <PrivateAdminRoute
+      exact
       path="/dashboard/videos"
       component={VideoListPage}
     />
@@ -60,6 +67,16 @@ const BaseRoute = () => (
     <PrivateAdminRoute
       exact
       path="/dashboard/user/:id"
+      component={SingleUser}
+    />
+    <PrivateAdminRoute
+      exact
+      path="/dashboard/video/:id"
+      component={SingleVideo}
+    />
+    <PrivateAdminRoute
+      exact
+      path="/dashboard/admin/:id"
       component={SingleUser}
     />
     <Route exact path="/user/login" component={LoginForm} />

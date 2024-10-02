@@ -9,7 +9,8 @@ const { Title } = Typography;
 const index = '1';
 function Dashboard() {
   const { state } = useContext(UserContext);
-  const { users, videos, staffs, scripts, usersByMonth, loading } = state;
+  const { users, admins, videos, staffs, scripts, usersByMonth, loading } =
+    state;
   const [userObj, setuserObj] = useState();
   const [lineData, setLineData] = useState();
   const [doughnutStateData, setdoughnutStateData] = useState();
@@ -41,7 +42,7 @@ function Dashboard() {
   };
 
   const DoughnutData = {
-    labels: ['Staff', 'Student'],
+    labels: ['Videos', 'Users'],
     datasets: [
       {
         data: [],
@@ -53,20 +54,18 @@ function Dashboard() {
   };
 
   const getAdminsData = () => {
-    const activeUsers = users
-      ? users.filter((user) => user.isActive === true).length
-      : 0;
+    const uploadedVideos = videos ? videos.length : 0;
 
     // console.log(state);
-    const StudentUsers = videos ? videos.length : 0;
+    const Users = users ? users.length : 0;
     const userObj = [
       { name: 'Total Scripts', stats: scripts ? scripts.length : 0 },
       { name: 'Total Videos', stats: videos ? videos.length : 0 },
       { name: 'Total Users', stats: users ? users.length : 0 },
-      { name: 'Admins', stats: users ? users.length : 0 }
+      { name: 'Admins', stats: admins ? admins.length : 0 }
     ];
-    DoughnutData.datasets[0].data.push(activeUsers);
-    DoughnutData.datasets[0].data.push(StudentUsers);
+    DoughnutData.datasets[0].data.push(uploadedVideos);
+    DoughnutData.datasets[0].data.push(Users);
     setdoughnutStateData(DoughnutData);
 
     return userObj;
@@ -92,7 +91,7 @@ function Dashboard() {
   useEffect(() => {
     // alert(JSON.stringify(students));
     setuserObj(getAdminsData());
-  }, [scripts, staffs, videos, users]);
+  }, [scripts, staffs, videos, users, admins]);
 
   useEffect(() => {
     arrangeUserStats();
@@ -112,7 +111,7 @@ function Dashboard() {
         </div>
 
         <div className="col-md-4 ">
-          <Card title="Staff Vs Student ">
+          <Card title="User Vs |Video ">
             {doughnutStateData ? (
               <>
                 <Spin spinning={loading}>

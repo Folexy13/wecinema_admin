@@ -4,10 +4,6 @@ import { Table, Switch } from 'antd';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../../context/userState/userContext';
 
-// function onChange(pagination, filters, sorter, extra) {
-//   console.log('params', pagination, filters, sorter, extra);
-// }
-
 function VideoTable({ data }) {
   const { changeVideoStatus } = useContext(UserContext);
 
@@ -36,7 +32,7 @@ function VideoTable({ data }) {
       title: 'Title',
       dataIndex: 'title',
       render: (text, record) => (
-        <Link to={`/dashboard/user/${record._id}`}>{text}</Link>
+        <Link to={`/dashboard/video/${record._id}`}>{text}</Link>
       ),
       sorter: (a, b) => a.name.length - b.name.length,
       sortDirections: ['descend']
@@ -45,7 +41,7 @@ function VideoTable({ data }) {
     {
       title: 'Author',
       dataIndex: 'author',
-      render: (author) => author.username
+      render: (author) => author?.username || 'Unknown Author'
     },
     {
       title: 'Genre',
@@ -64,17 +60,36 @@ function VideoTable({ data }) {
           value: 'adventure'
         },
         {
-          text: 'Action',
-          value: 'action'
-        },
-        {
           text: 'Drama',
           value: 'drama'
+        },
+        {
+          text: 'Documentary',
+          value: 'documentary'
+        },
+        {
+          text: 'Mystery',
+          value: 'mystery'
+        },
+        {
+          text: 'Romance',
+          value: 'romance'
+        },
+        {
+          text: 'Fiction',
+          value: 'fiction'
+        },
+        {
+          text: 'Thriller',
+          value: 'thriller'
         }
       ],
-      // specify the condition of filtering result
-      // here is that finding the name started with `value`
-      onFilter: (value, record) => record.role.indexOf(value) === 0
+      // Specify the condition of filtering
+      onFilter: (value, record) =>
+        record.genre.some(
+          (genre) => genre.toLowerCase() === value.toLowerCase()
+        ),
+      render: (genres) => genres.join(', ') // To display genres as a string in the table
     },
     {
       title: 'Description',
@@ -94,8 +109,6 @@ function VideoTable({ data }) {
           value: false
         }
       ],
-      // specify the condition of filtering result
-      // here is that finding the name started with `value`
       onFilter: (value, record) => record.isActive === value,
       render: (isActive, record) => (
         <Switch

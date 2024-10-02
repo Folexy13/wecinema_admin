@@ -2,23 +2,23 @@ import React, { useContext, useState, useEffect } from 'react';
 
 import DashboardHOC from '../DashboardHOC';
 import { Typography, Popconfirm, Button } from 'antd';
-import SingleUserStyled from './SingleUserStyled';
+import SingleVideoStyled from './SingleVideoStyled';
 import { UserContext } from '../../../context/userState/userContext';
 import PasswordForm from '../password/PasswordForm';
 import UserForm from '../form/UserForm';
 import CustomLoader from '../../common/CustomLoader';
 
-function SingleUser(props) {
+function SingleVideo(props) {
   const {
     state,
-    fetchSingleUser,
+    fetchSingleVideo,
     editUserAction,
     deleteUserAction,
     changeUserPasswordAction
   } = useContext(UserContext);
   const [passwordFormVisibility, setpasswordFormVisibility] = useState(false);
 
-  const { error, loading, user } = state;
+  const { loading, video } = state;
 
   // const [initialValues, setinitialValues] = useState(null);
   const handlePasswordChange = (data) => {
@@ -32,41 +32,41 @@ function SingleUser(props) {
   const id = props.match.params.id;
 
   useEffect(() => {
-    fetchSingleUser(id);
-  }, [fetchSingleUser, id]);
+    fetchSingleVideo(id);
+  }, [fetchSingleVideo, id]);
 
   const onFinish = (values) => {
-    values._id = user._id;
+    values._id = video._id;
     delete values.password;
     editUserAction(values);
   };
 
   const onConfirmDelete = () => {
     deleteUserAction(id);
-    props.history.push('/dashboard/users');
+    props.history.push('/dashboard/videos');
   };
 
   return (
-    <SingleUserStyled>
-      {user ? (
+    <SingleVideoStyled>
+      {video ? (
         <>
-          <Typography>Edit {user.name || user.username}'s Profile</Typography>
-          {user.role !== 'admin' ? (
+          <Typography>Edit {video.name}'s Profile</Typography>
+          {video.role !== 'admin' ? (
             <Popconfirm
-              title="Are you sure delete this user?"
+              title="Are you sure delete this video?"
               onConfirm={onConfirmDelete}
               // onCancel={cancel}
               okText="Delete"
               cancelText="Cancel"
             >
               <Button className="float-right" danger>
-                Delete {user.name}
+                Delete {video.name}
               </Button>
             </Popconfirm>
           ) : null}
 
           <UserForm
-            user={user}
+            user={video}
             onFinish={onFinish}
             changePasswordModal={changePasswordModal}
             loading={loading}
@@ -86,8 +86,8 @@ function SingleUser(props) {
         }}
         id={id}
       />
-    </SingleUserStyled>
+    </SingleVideoStyled>
   );
 }
 
-export default DashboardHOC(SingleUser);
+export default DashboardHOC(SingleVideo);

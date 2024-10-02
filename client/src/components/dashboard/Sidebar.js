@@ -5,7 +5,8 @@ import {
   HomeOutlined,
   SettingOutlined,
   PlayCircleOutlined,
-  FullscreenExitOutlined
+  FullscreenExitOutlined,
+  UsergroupAddOutlined
 } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import SidebarStyled from './SidebarStyled';
@@ -54,6 +55,11 @@ function Sidebar({ collapsed, index, loggedInUserId }) {
           <Menu.Item key="4" icon={<FullscreenExitOutlined />}>
             <Link className="text-white" to="/dashboard/scripts">
               Scripts
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="4" icon={<UsergroupAddOutlined />}>
+            <Link className="text-white" to="/dashboard/admins">
+              Admins
             </Link>
           </Menu.Item>
           <Menu.Item key="5" icon={<SettingOutlined />}>

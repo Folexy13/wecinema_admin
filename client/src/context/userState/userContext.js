@@ -13,9 +13,12 @@ const initialUserState = {
   loading: false,
   error: false,
   users: '',
+  admins: '',
   videos: '',
   scripts: '',
   user: null,
+  admin: null,
+  video: null,
   me: null,
   usersByMonth: null,
   errResponse: '',
@@ -142,7 +145,9 @@ export const UserProvider = ({ children }) => {
       type: types.USER_START
     });
     try {
+      // const res = await adminApi.get('/api/user/');
       const res = await axios.get(BE_API + '/user');
+
       dispatch({
         type: types.USER_SUCCESS,
         payload: res.data
@@ -150,7 +155,26 @@ export const UserProvider = ({ children }) => {
     } catch (error) {
       dispatch({
         type: types.USER_FAILURE,
-        payload: error.response.data.error_msg
+        payload: error?.response?.data.error_msg
+      });
+    }
+  }, []);
+
+  const fetchAdmins = useCallback(async () => {
+    dispatch({
+      type: types.ADMIN_START
+    });
+    try {
+      const res = await adminApi.get('/api/user/');
+      console.log(res.data.data);
+      dispatch({
+        type: types.ADMIN_SUCCESS,
+        payload: res.data.data
+      });
+    } catch (error) {
+      dispatch({
+        type: types.ADMIN_FAILURE,
+        payload: error?.response?.data.error_msg
       });
     }
   }, []);
@@ -265,12 +289,42 @@ export const UserProvider = ({ children }) => {
     }
   }, []);
 
+  const fetchSingleVideo = useCallback(async (id) => {
+    dispatch({
+      type: types.VIDEO_START
+    });
+    const tempState = { ...state };
+    if (!tempState.videos) {
+      try {
+        const res = await axios.get(BE_API + '/video/' + id);
+        dispatch({
+          type: types.GET_VIDEO,
+          payload: res.data
+        });
+      } catch (error) {
+        dispatch({
+          type: types.VIDEO_FAILURE,
+          payload: error.response.data.error_msg
+        });
+      }
+    } else {
+      const video = tempState.fliter((video) => video._id == id);
+      dispatch({
+        type: types.GET_VIDEO,
+        payload: video
+      });
+    }
+  }, []);
   const editUserAction = useCallback(async (data) => {
+    const { role, _id: id } = data;
     dispatch({
       type: types.USER_START
     });
     try {
-      const res = await adminApi.patch('/api/user/edit-user', data);
+      const res =
+        role === 'admin'
+          ? await adminApi.patch('/api/user/edit-user', data)
+          : await BE_API.put(`/user/edit/${id}`, data);
       dispatch({
         type: types.USER_EDIT,
         payload: res.data.data
@@ -324,6 +378,7 @@ export const UserProvider = ({ children }) => {
     fetchLoggedInUser();
     fetchUsers();
     // fetchStaffs();
+    fetchAdmins();
     fetchVideos();
     fetchScripts();
     fetchUsersByMonth();
@@ -334,7 +389,8 @@ export const UserProvider = ({ children }) => {
       value={{
         state,
         fetchSingleUser,
-        // fetchStaffs,
+        fetchSingleVideo,
+        fetchAdmins,
         fetchScripts,
         fetchUsersByMonth,
         editUserAction,
