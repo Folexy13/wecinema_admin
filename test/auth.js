@@ -15,7 +15,7 @@ describe('AUTH API', () => {
     it('It should register a user', (done) => {
       const registrationData = {
         name: 'Aluko Opeyemi F.',
-        email: 'onsas@gmail.com',
+        email: 'folajimiopeyemisax13@gmail.com',
         password: 'testing',
         role: 'admin'
       };
@@ -34,7 +34,7 @@ describe('AUTH API', () => {
     it('It should {not register} a user', (done) => {
       const registrationData = {
         name: 'Aluko Opeyemi F.',
-        email: 'onasanysss@gmail.com',
+        email: 'folajimiopeyemisax13@gmail.com',
         password: 'testing',
         role: 'admin'
       };

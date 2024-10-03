@@ -72,9 +72,9 @@ const editUserAction = async (req, res) => {
 const deleteUserAction = async (req, res) => {
   try {
     const user = await getSingleUserService({ _id: req.params.id });
-    if (user.role === 'admin') {
-      return res.status(401).json({ error_msg: 'Nice try' });
-    }
+    // if (user.role === 'admin') {
+    //   return res.status(401).json({ error_msg: 'Nice try' });
+    // }
     await user.remove();
     return res.json({ data: 'Success' });
   } catch (err) {

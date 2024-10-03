@@ -49,6 +49,6 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-module.exports = app.listen(port, () =>
-  console.log('Server up and running on port:', port)
-);
+module.exports = app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});

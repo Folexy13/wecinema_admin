@@ -7,6 +7,7 @@ import { UserContext } from '../../../context/userState/userContext';
 import PasswordForm from '../password/PasswordForm';
 import UserForm from '../form/UserForm';
 import CustomLoader from '../../common/CustomLoader';
+import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 
 function SingleUser(props) {
   const {
@@ -18,8 +19,9 @@ function SingleUser(props) {
   } = useContext(UserContext);
   const [passwordFormVisibility, setpasswordFormVisibility] = useState(false);
 
-  const { error, loading, user } = state;
+  const { loading, user } = state;
 
+  const payload = useLocation();
   // const [initialValues, setinitialValues] = useState(null);
   const handlePasswordChange = (data) => {
     changeUserPasswordAction(data);
@@ -32,19 +34,30 @@ function SingleUser(props) {
   const id = props.match.params.id;
 
   useEffect(() => {
-    fetchSingleUser(id);
+    fetchSingleUser(id, payload?.state?.userRole);
   }, [fetchSingleUser, id]);
 
   const onFinish = (values) => {
     values._id = user._id;
-    delete values.password;
-    editUserAction(values);
+    // console.log(values);
+    if (user?.role != 'admin') {
+      delete values.password;
+    } else {
+      delete user.password;
+    }
+    const payload = {
+      ...user,
+      ...values,
+      date: user.date
+    };
+    editUserAction(payload);
   };
 
   const onConfirmDelete = () => {
     deleteUserAction(id);
     props.history.push('/dashboard/users');
   };
+  console.log(user);
 
   return (
     <SingleUserStyled>

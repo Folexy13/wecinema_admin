@@ -62,6 +62,14 @@ export default (state, action) => {
         error: false,
         errResponse: ''
       };
+    case types.GET_VIDEO:
+      return {
+        ...state,
+        loading: false,
+        video: action.payload,
+        error: false,
+        errResponse: ''
+      };
     case types.USER_ADD:
       return {
         ...state,
@@ -101,6 +109,9 @@ export default (state, action) => {
         ...state,
         users: [
           ...state.users.slice().filter((data) => data._id !== action.payload)
+        ],
+        admins: [
+          ...state.admins.slice().filter((data) => data._id !== action.payload)
         ],
         loading: false,
         error: false,

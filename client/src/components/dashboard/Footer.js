@@ -9,7 +9,7 @@ function CustomFooter() {
       <Footer style={{ textAlign: 'center' }}>
         Built with ❤️ by{' '}
         <a
-          href="https://onasanyatunde.codes"
+          href="https://my-portfolio-g8e2htnzv-folexy13.vercel.app/"
           rel="noopener noreferrer"
           target="_blank"
         >

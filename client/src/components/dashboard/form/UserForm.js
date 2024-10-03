@@ -2,10 +2,12 @@ import React from 'react';
 import { Row, Col } from 'antd';
 import { Link } from 'react-router-dom';
 import { Form, Input, Button, Select, Switch, Tooltip } from 'antd';
+import moment from 'moment';
 import {
   UserOutlined,
   LockOutlined,
-  QuestionCircleOutlined
+  QuestionCircleOutlined,
+  ClockCircleFilled
 } from '@ant-design/icons';
 
 function UserForm({ user, onFinish, changePasswordModal, loading }) {
@@ -14,7 +16,7 @@ function UserForm({ user, onFinish, changePasswordModal, loading }) {
       <Form
         name="user_details_form"
         className="login-form"
-        initialValues={user}
+        initialValues={{ ...user, date: moment(user?.date).format('LL') }}
         onFinish={onFinish}
         layout="vertical"
         size="large"
@@ -23,12 +25,15 @@ function UserForm({ user, onFinish, changePasswordModal, loading }) {
         <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
           <Col span={12}>
             <Form.Item
-              name="username"
-              label="Username"
+              name={user?.role === 'admin' ? 'name' : 'username'}
+              label={user?.role === 'admin' ? 'Name' : 'Username'}
               rules={[
                 {
                   required: true,
-                  message: 'Please input username!'
+                  message:
+                    user?.role === 'admin'
+                      ? 'Please input name!'
+                      : 'Please input username!'
                 }
               ]}
             >
@@ -108,8 +113,10 @@ function UserForm({ user, onFinish, changePasswordModal, loading }) {
           </Col>
           <Col span={12}>
             <Form.Item
-              name="dob"
-              label="Date Of Birth"
+              name={user?.role === 'admin' ? 'date' : 'dob'}
+              label={
+                user?.role === 'admin' ? 'Account created' : 'Date Of Birth'
+              }
               rules={[
                 {
                   required: true,
@@ -118,16 +125,24 @@ function UserForm({ user, onFinish, changePasswordModal, loading }) {
               ]}
             >
               <Input
-                prefix={<UserOutlined className="site-form-item-icon" />}
+                prefix={<ClockCircleFilled className="site-form-item-icon" />}
                 placeholder="dd-mm-yyyy"
-                type="date"
+                readOnly={user?.role === 'admin'} // Make input read-only if user is admin
+                type="text"
               />
             </Form.Item>
           </Col>
         </Row>
 
-        <Form.Item label="Active Status" name="status">
-          <Switch defaultChecked={user ? user?.status : true} />
+        <Form.Item
+          label="Active Status"
+          name={user?.role === 'admin' ? 'isActive' : 'status'}
+        >
+          <Switch
+            defaultChecked={
+              user?.role != 'admin' ? user?.status : user?.isActive
+            }
+          />
         </Form.Item>
 
         <Form.Item>
@@ -141,7 +156,13 @@ function UserForm({ user, onFinish, changePasswordModal, loading }) {
             Save
           </Button>
           <Button type="info" className="login-form-button">
-            <Link to="/dashboard/users">Back</Link>
+            <Link
+              to={
+                user?.role != 'admin' ? '/dashboard/users' : '/dashboard/admins'
+              }
+            >
+              Back
+            </Link>
           </Button>
         </Form.Item>
       </Form>

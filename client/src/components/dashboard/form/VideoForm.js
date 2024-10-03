@@ -1,11 +1,8 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Row, Col, Upload } from 'antd';
 import { Link } from 'react-router-dom';
 import { Form, Input, Button, Select, Switch, Tooltip } from 'antd';
 import {
-  UserOutlined,
-  LockOutlined,
-  QuestionCircleOutlined,
   VideoCameraOutlined,
   TableOutlined,
   UploadOutlined
@@ -13,14 +10,21 @@ import {
 import { Option } from 'antd/lib/mentions';
 
 function VideoForm({ video, user, onFinish, loading }) {
-  const formRef = useRef(null);
+  const [selectedGenres, setSelectedGenres] = useState(video.genre || []);
+
+  const handleChange = (value) => {
+    setSelectedGenres(value);
+  };
+  useEffect(() => {
+    setSelectedGenres(video.genre);
+  }, [video]);
 
   return (
     <>
       <Form
         name="video_details_form"
         className="login-form"
-        initialValues={user}
+        initialValues={video}
         onFinish={onFinish}
         layout="vertical"
         size="large"
@@ -66,8 +70,8 @@ function VideoForm({ video, user, onFinish, loading }) {
                   placeholder="Lorem discription"
                   // {user ? readOnly: false}
 
-                  readOnly={video ? true : false}
-                  value={video ? 'rtfgyhuj' : ''}
+                  // readOnly={video ? true : false}
+                  value={video.description}
                 />
               </Form.Item>
             ) : null}
@@ -86,16 +90,21 @@ function VideoForm({ video, user, onFinish, loading }) {
                 }
               ]}
             >
-              <Select placeholder="Select genre" mode="multiple">
-                <Option value="comedy">Comedy</Option>
-                <Option value="adventure">Adventure</Option>
-                <Option value="action">Action</Option>
-                <Option value="fiction">Fiction</Option>
-                <Option value="documentary">Documentary</Option>
-                <Option value="drama">Drama</Option>
-                <Option value="horror">Horror</Option>
-                <Option value="romance">Romance</Option>
-                <Option value="thriller">Thriller</Option>
+              <Select
+                placeholder="Select genre"
+                mode="multiple"
+                value={selectedGenres} // Set selected genres here
+                onChange={handleChange}
+              >
+                <Option value="Comedy">Comedy</Option>
+                <Option value="Adventure">Adventure</Option>
+                <Option value="Action">Action</Option>
+                <Option value="Fiction">Fiction</Option>
+                <Option value="Documentary">Documentary</Option>
+                <Option value="Drama">Drama</Option>
+                <Option value="Horror">Horror</Option>
+                <Option value="Romance">Romance</Option>
+                <Option value="Thriller">Thriller</Option>
               </Select>
             </Form.Item>
           </Col>

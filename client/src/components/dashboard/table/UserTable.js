@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Table, Switch } from 'antd';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../../context/userState/userContext';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 // function onChange(pagination, filters, sorter, extra) {
 //   console.log('params', pagination, filters, sorter, extra);
@@ -14,7 +15,6 @@ function UserTable({ data }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10); // Set your default page size
   const [loading, setLoading] = useState('');
-
   const handleSwitchChange = async (userId, checked) => {
     setLoading(userId);
     try {
@@ -45,7 +45,14 @@ function UserTable({ data }) {
       title: 'Username',
       dataIndex: 'username',
       render: (text, record) => (
-        <Link to={`/dashboard/user/${record._id}`}>{text}</Link>
+        <Link
+          to={{
+            pathname: `/dashboard/user/${record._id}`,
+            state: { userRole: 'member' } // Pass additional state
+          }}
+        >
+          {text}
+        </Link>
       ),
       sorter: (a, b) => a.username?.length - b.username?.length,
       sortDirections: ['descend']
@@ -83,9 +90,9 @@ function UserTable({ data }) {
       )
     }
   ];
-    const handleTableChange = (pagination) => {
-      setCurrentPage(pagination.current);
-    };
+  const handleTableChange = (pagination) => {
+    setCurrentPage(pagination.current);
+  };
   return (
     <>
       <Table

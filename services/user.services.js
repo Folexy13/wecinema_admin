@@ -3,7 +3,7 @@ const User = require('../models/User');
 const getUser = async (query) => {
   try {
     const user = await User.findOne(query).select('+password');
-    if (!user || !user.status) {
+    if (!user || (!user.status && !user.isActive)) {
       throw Error('User not found or not active');
     }
 

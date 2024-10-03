@@ -28,9 +28,10 @@ export const AuthProvider = ({ children }) => {
     });
     try {
       const res = await adminApi.post('/api/auth/login', data);
+      localStorage.setItem('mern_admin_dashboard', res.data.access_token);
+
       const resp = await adminApi.get('/api/user/me');
 
-      localStorage.setItem('mern_admin_dashboard', res.data.access_token);
       dispatch({
         type: types.AUTH_SUCCESS,
         payload: res.data.access_token

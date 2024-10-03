@@ -19,8 +19,10 @@ const userEditValidation = (data) => {
     name: Joi.string().min(6).required(),
     email: Joi.string().min(6).required().email(),
     role: Joi.string().required(),
+    date: Joi.string(),
     isActive: Joi.boolean().required(),
-    _id: Joi.string().required()
+    _id: Joi.string().required(),
+    __v: Joi.number()
   });
 
   return schema.validate(data);

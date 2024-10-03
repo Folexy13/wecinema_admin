@@ -12,12 +12,12 @@ function AdminListPage() {
 
   return (
     <div>
-      <Link
+      {/* <Link
         to="/dashboard/add-new-user"
         className="btn btn-primary float-right cursor-pointer mb-2 "
       >
         Add new Admin
-      </Link>
+      </Link> */}
       {!loading ? (
         <AdminTable data={admins} />
       ) : (

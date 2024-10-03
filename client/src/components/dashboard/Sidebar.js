@@ -63,7 +63,12 @@ function Sidebar({ collapsed, index, loggedInUserId }) {
             </Link>
           </Menu.Item>
           <Menu.Item key="5" icon={<SettingOutlined />}>
-            <Link to={`/dashboard/user/${loggedInUserId}`}></Link>
+            <Link
+              to={{
+                pathname: `/dashboard/user/${loggedInUserId}`,
+                state: { userRole: 'admin' }
+              }}
+            ></Link>
             Account Settings
           </Menu.Item>
         </Menu>

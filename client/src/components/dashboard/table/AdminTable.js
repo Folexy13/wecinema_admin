@@ -10,6 +10,7 @@ import { UserContext } from '../../../context/userState/userContext';
 
 function AdminTable({ data }) {
   const { changeUserStatus } = useContext(UserContext);
+  console.log(data);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10); // Set your default page size
@@ -41,7 +42,14 @@ function AdminTable({ data }) {
       title: 'Name',
       dataIndex: 'name',
       render: (text, record) => (
-        <Link to={`/dashboard/user/${record._id}`}>{text}</Link>
+        <Link
+          to={{
+            pathname: `/dashboard/user/${record._id}`,
+            state: { userRole: 'admin' } // Pass additional state
+          }}
+        >
+          {text}
+        </Link>
       ),
       sorter: (a, b) => a.username?.length - b.username?.length,
       sortDirections: ['descend']

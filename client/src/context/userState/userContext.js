@@ -185,6 +185,7 @@ export const UserProvider = ({ children }) => {
     });
     try {
       const res = await adminApi.get('/api/user/me');
+      console.log(res);
       dispatch({
         type: types.GET_LOGGED_IN_USER,
         payload: res.data.data
@@ -262,17 +263,21 @@ export const UserProvider = ({ children }) => {
     }
   }, []);
 
-  const fetchSingleUser = useCallback(async (id) => {
+  const fetchSingleUser = useCallback(async (id, role) => {
     dispatch({
       type: types.USER_START
     });
     const tempState = { ...state };
     if (!tempState.users) {
       try {
-        const res = await axios.get(BE_API + '/user/' + id);
+        const res =
+          role === 'admin'
+            ? await adminApi.get(`/api/user/single/${id}`)
+            : await axios.get(BE_API + '/user/' + id);
+        // console.log(res);
         dispatch({
           type: types.GET_USER,
-          payload: res.data
+          payload: role === 'admin' ? res.data.data : res.data
         });
       } catch (error) {
         dispatch({
@@ -294,14 +299,17 @@ export const UserProvider = ({ children }) => {
       type: types.VIDEO_START
     });
     const tempState = { ...state };
+
     if (!tempState.videos) {
       try {
         const res = await axios.get(BE_API + '/video/' + id);
+        // console.log(res);
         dispatch({
           type: types.GET_VIDEO,
           payload: res.data
         });
       } catch (error) {
+        console.log(error);
         dispatch({
           type: types.VIDEO_FAILURE,
           payload: error.response.data.error_msg
@@ -309,6 +317,7 @@ export const UserProvider = ({ children }) => {
       }
     } else {
       const video = tempState.fliter((video) => video._id == id);
+      // console.log(video);
       dispatch({
         type: types.GET_VIDEO,
         payload: video
@@ -342,8 +351,7 @@ export const UserProvider = ({ children }) => {
       type: types.USER_START
     });
     try {
-      // await adminApi.post(`/api/user/delete/${id}`);
-      console.log(id);
+      await adminApi.get(`/api/user/delete/${id}`);
       dispatch({
         type: types.USER_DELETE,
         payload: id

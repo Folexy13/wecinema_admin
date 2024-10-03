@@ -5,7 +5,7 @@ import { Typography, Popconfirm, Button } from 'antd';
 import SingleVideoStyled from './SingleVideoStyled';
 import { UserContext } from '../../../context/userState/userContext';
 import PasswordForm from '../password/PasswordForm';
-import UserForm from '../form/UserForm';
+import VideoForm from '../form/VideoForm';
 import CustomLoader from '../../common/CustomLoader';
 
 function SingleVideo(props) {
@@ -18,7 +18,9 @@ function SingleVideo(props) {
   } = useContext(UserContext);
   const [passwordFormVisibility, setpasswordFormVisibility] = useState(false);
 
-  const { loading, video } = state;
+  const { loading, video, user } = state;
+
+  console.log(video);
 
   // const [initialValues, setinitialValues] = useState(null);
   const handlePasswordChange = (data) => {
@@ -50,23 +52,24 @@ function SingleVideo(props) {
     <SingleVideoStyled>
       {video ? (
         <>
-          <Typography>Edit {video.name}'s Profile</Typography>
+          <Typography>Edit {video.title}</Typography>
           {video.role !== 'admin' ? (
             <Popconfirm
-              title="Are you sure delete this video?"
+              title="Are you sure you want to delete this video?"
               onConfirm={onConfirmDelete}
               // onCancel={cancel}
               okText="Delete"
               cancelText="Cancel"
             >
               <Button className="float-right" danger>
-                Delete {video.name}
+                Delete {video.title}
               </Button>
             </Popconfirm>
           ) : null}
 
-          <UserForm
-            user={video}
+          <VideoForm
+            video={video}
+            user={user}
             onFinish={onFinish}
             changePasswordModal={changePasswordModal}
             loading={loading}

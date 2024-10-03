@@ -21,8 +21,13 @@ const userSchema = new Schema({
   isActive: {
     type: Boolean,
     default: true
+  },
+  date: {
+    type: Date,
+    default: Date.now,
+    expires: 43200
   }
 });
 
-const userModel = mongoose.model('User', userSchema);
+const userModel = mongoose.model('Admin', userSchema);
 module.exports = userModel;

@@ -70,11 +70,13 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   // Validate data before creating a user
+
   handleValidation(req.body, res, 'login');
 
   try {
     //   Checking if the user is already in the db
     const user = await getUser({ email: req.body.email });
+
     //   Password check
     const validPass = await bcrypt.compare(req.body.password, user.password);
 
