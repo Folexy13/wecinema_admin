@@ -11,6 +11,22 @@ export default (state, action) => {
         user: null,
         error: null
       };
+    case types.VIDEO_START:
+      return {
+        ...state,
+        loading: true,
+        message: null,
+        user: null,
+        error: null
+      };
+    case types.SCRIPT_START:
+      return {
+        ...state,
+        loading: true,
+        message: null,
+        user: null,
+        error: null
+      };
 
     case types.USER_SUCCESS:
       return {
@@ -70,6 +86,14 @@ export default (state, action) => {
         error: false,
         errResponse: ''
       };
+    case types.GET_SCRIPT:
+      return {
+        ...state,
+        loading: false,
+        script: action.payload,
+        error: false,
+        errResponse: ''
+      };
     case types.USER_ADD:
       return {
         ...state,
@@ -88,11 +112,20 @@ export default (state, action) => {
         errResponse: '',
         message: 'Add success'
       };
+    case types.SCRIPT_ADD:
+      return {
+        ...state,
+        scripts: [action.payload, ...state.scripts],
+        loading: false,
+        error: false,
+        errResponse: '',
+        message: 'Add success'
+      };
 
     case types.USER_EDIT:
-      const tempState = state.users
-        .slice()
-        .filter((data) => data._id !== action.payload._id);
+      const tempState = state.users.filter(
+        (data) => data._id !== action.payload._id
+      );
 
       return {
         ...state,
@@ -103,15 +136,79 @@ export default (state, action) => {
         user: action.payload,
         message: 'Edited success'
       };
+    case types.ADMIN_EDIT:
+      const tempState3 = state.admins.filter(
+        (data) => data._id !== action.payload._id
+      );
 
+      return {
+        ...state,
+        admins: [action.payload, ...tempState3],
+        loading: false,
+        error: false,
+        errResponse: '',
+        user: action.payload,
+        message: 'Edited success'
+      };
+    case types.VIDEO_EDIT:
+      const tempState2 = state.videos.filter(
+        (data) => data._id !== action.payload._id
+      );
+
+      return {
+        ...state,
+        videos: [action.payload, ...tempState2],
+        loading: false,
+        error: false,
+        errResponse: '',
+        video: action.payload,
+        message: 'Edited success'
+      };
+    case types.SCRIPT_EDIT:
+      const tempState4 = state.scripts.filter(
+        (data) => data._id !== action.payload._id
+      );
+
+      return {
+        ...state,
+        scripts: [action.payload, ...tempState4],
+        loading: false,
+        error: false,
+        errResponse: '',
+        script: action.payload,
+        message: 'Edited success'
+      };
+    case types.VIDEO_DELETE:
+      return {
+        ...state,
+        videos: [
+          ...state.videos.slice().filter((data) => data._id !== action.payload)
+        ],
+
+        loading: false,
+        error: false,
+        errResponse: '',
+        user: null,
+        message: 'Deleted successfully'
+      };
+    case types.SCRIPT_DELETE:
+      return {
+        ...state,
+        scripts: [
+          ...state.scripts.slice().filter((data) => data._id !== action.payload)
+        ],
+
+        loading: false,
+        error: false,
+        errResponse: '',
+        user: null,
+        message: 'Deleted successfully'
+      };
     case types.USER_DELETE:
       return {
         ...state,
         users: [
           ...state.users.slice().filter((data) => data._id !== action.payload)
-        ],
-        admins: [
-          ...state.admins.slice().filter((data) => data._id !== action.payload)
         ],
         loading: false,
         error: false,

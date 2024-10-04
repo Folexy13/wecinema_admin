@@ -11,13 +11,15 @@ function VideoListPage() {
 
   return (
     <div>
-      <Link
-        to="/dashboard/add-new-video"
-        className="btn btn-primary float-right cursor-pointer mb-2 "
-      >
-        Add new Video
-      </Link>
-      {!loading ? (
+      {videos && (
+        <Link
+          to="/dashboard/add-new-video"
+          className="btn btn-primary float-right cursor-pointer mb-2 "
+        >
+          Add new Video
+        </Link>
+      )}
+      {!loading && videos ? (
         <Table data={videos} />
       ) : (
         <CustomLoader text={'Getting videos from DB! Hold on gee...'} />

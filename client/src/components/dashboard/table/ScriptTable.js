@@ -10,6 +10,8 @@ import { UserContext } from '../../../context/userState/userContext';
 
 function ScriptTable({ data }) {
   const [loading, setLoading] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10); // Set your default page size
 
   useEffect(() => {
     setTimeout(() => {
@@ -20,14 +22,15 @@ function ScriptTable({ data }) {
   const columns = [
     {
       title: 'ID',
-      dataIndex: '_id',
+      dataIndex: 'id',
+      render: (text, record, index) => (currentPage - 1) * pageSize + index + 1,
       responsive: ['lg']
     },
     {
       title: 'Title',
       dataIndex: 'title',
       render: (text, record) => (
-        <Link to={`/dashboard/user/${record._id}`}>{text}</Link>
+        <a href={`/dashboard/script/${record._id}`}>{text}</a>
       ),
       sorter: (a, b) => a.name.length - b.name.length,
       sortDirections: ['descend']
@@ -55,17 +58,36 @@ function ScriptTable({ data }) {
           value: 'adventure'
         },
         {
-          text: 'Action',
-          value: 'action'
-        },
-        {
           text: 'Drama',
           value: 'drama'
+        },
+        {
+          text: 'Documentary',
+          value: 'documentary'
+        },
+        {
+          text: 'Mystery',
+          value: 'mystery'
+        },
+        {
+          text: 'Romance',
+          value: 'romance'
+        },
+        {
+          text: 'Fiction',
+          value: 'fiction'
+        },
+        {
+          text: 'Thriller',
+          value: 'thriller'
         }
       ],
-      // specify the condition of filtering result
-      // here is that finding the name started with `value`
-      onFilter: (value, record) => record.role.indexOf(value) === 0
+      // Specify the condition of filtering
+      onFilter: (value, record) =>
+        record.genre.some(
+          (genre) => genre.toLowerCase() === value.toLowerCase()
+        ),
+      render: (genres) => genres.join(', ') // To display genres as a string in the table
     }
     // {
     //   title: 'Description',
@@ -73,6 +95,9 @@ function ScriptTable({ data }) {
     //   responsive: ['md']
     // }
   ];
+  const handleTableChange = (pagination) => {
+    setCurrentPage(pagination.current);
+  };
   return (
     <>
       <Table
@@ -80,7 +105,8 @@ function ScriptTable({ data }) {
         columns={columns}
         dataSource={data}
         style={{ clear: 'both' }}
-        // onChange={onChange}
+        pagination={{ pageSize }}
+        onChange={handleTableChange}
       />
     </>
   );

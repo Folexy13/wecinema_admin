@@ -12,13 +12,14 @@ import axios from 'axios';
 const initialUserState = {
   loading: false,
   error: false,
-  users: '',
-  admins: '',
-  videos: '',
-  scripts: '',
+  users: null,
+  admins: null,
+  videos: null,
+  scripts: null,
   user: null,
   admin: null,
   video: null,
+  script: null,
   me: null,
   usersByMonth: null,
   errResponse: '',
@@ -208,6 +209,12 @@ export const UserProvider = ({ children }) => {
         type: types.USER_ADD,
         payload: res.data.data
       });
+      const resp = await axios.get(BE_API + '/user');
+
+      dispatch({
+        type: types.USER_SUCCESS,
+        payload: resp.data
+      });
     } catch (error) {
       dispatch({
         type: types.USER_FAILURE,
@@ -225,7 +232,7 @@ export const UserProvider = ({ children }) => {
       });
     } catch (error) {
       dispatch({
-        type: types.USER_FAILURE,
+        type: types.VIDEO_FAILURE,
         payload: error.response.data.error
       });
     }
@@ -234,12 +241,12 @@ export const UserProvider = ({ children }) => {
     try {
       const res = await axios.post(BE_API + '/video/scripts', data);
       dispatch({
-        type: types.VIDEO_ADD,
+        type: types.SCRIPT_ADD,
         payload: res.data.data
       });
     } catch (error) {
       dispatch({
-        type: types.USER_FAILURE,
+        type: types.SCRIPT_FAILURE,
         payload: error.response.data.error
       });
     }
@@ -317,7 +324,38 @@ export const UserProvider = ({ children }) => {
       }
     } else {
       const video = tempState.fliter((video) => video._id == id);
-      // console.log(video);
+
+      dispatch({
+        type: types.GET_VIDEO,
+        payload: video
+      });
+    }
+  }, []);
+
+  const fetchSingleScript = useCallback(async (id) => {
+    dispatch({
+      type: types.SCRIPT_START
+    });
+    const tempState = { ...state };
+
+    if (!tempState.videos) {
+      try {
+        const res = await axios.get(BE_API + '/video/scripts/' + id);
+        // console.log(res);
+        dispatch({
+          type: types.GET_SCRIPT,
+          payload: res.data
+        });
+      } catch (error) {
+        console.log(error);
+        dispatch({
+          type: types.SCRIPT_FAILURE,
+          payload: error.response.data.error_msg
+        });
+      }
+    } else {
+      const video = tempState.fliter((video) => video._id == id);
+
       dispatch({
         type: types.GET_VIDEO,
         payload: video
@@ -333,15 +371,57 @@ export const UserProvider = ({ children }) => {
       const res =
         role === 'admin'
           ? await adminApi.patch('/api/user/edit-user', data)
-          : await BE_API.put(`/user/edit/${id}`, data);
+          : await adminApi.put(BE_API + `/user/edit/${id}`, data);
       dispatch({
-        type: types.USER_EDIT,
-        payload: res.data.data
+        type: role === 'admin' ? types.ADMIN_EDIT : types.USER_EDIT,
+        payload: role === 'admin' ? res.data.data : res.data.user
+      });
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: types.USER_FAILURE,
+        payload: error?.response?.data?.error_msg
+      });
+    }
+  }, []);
+
+  const editVideoAction = useCallback(async (data) => {
+    const { _id: id } = data;
+    dispatch({
+      type: types.VIDEO_START
+    });
+    try {
+      const res = await adminApi.put(BE_API + `/video/edit/${id}`, data);
+
+      dispatch({
+        type: types.VIDEO_EDIT,
+        payload: res.data.video
+      });
+      console.log(res);
+    } catch (error) {
+      dispatch({
+        type: types.VIDEO_FAILURE,
+        payload: error?.response?.data?.error_msg
+      });
+    }
+  }, []);
+
+  const editScriptAction = useCallback(async (data) => {
+    const { _id: id } = data;
+    dispatch({
+      type: types.SCRIPT_START
+    });
+    try {
+      const res = await adminApi.put(BE_API + `/video/scripts/${id}`, data);
+
+      dispatch({
+        type: types.SCRIPT_EDIT,
+        payload: res.data
       });
     } catch (error) {
       dispatch({
-        type: types.USER_FAILURE,
-        payload: error.response.data.error_msg
+        type: types.SCRIPT_FAILURE,
+        payload: error?.response?.data?.error_msg
       });
     }
   }, []);
@@ -351,7 +431,7 @@ export const UserProvider = ({ children }) => {
       type: types.USER_START
     });
     try {
-      await adminApi.get(`/api/user/delete/${id}`);
+      await adminApi.delete(BE_API + `/user/delete/${id}`);
       dispatch({
         type: types.USER_DELETE,
         payload: id
@@ -359,6 +439,42 @@ export const UserProvider = ({ children }) => {
     } catch (error) {
       dispatch({
         type: types.USER_FAILURE,
+        payload: error.response.data.error_msg
+      });
+    }
+  }, []);
+
+  const deleteVideoAction = useCallback(async (id) => {
+    dispatch({
+      type: types.VIDEO_START
+    });
+    try {
+      await adminApi.delete(BE_API + `/video/delete/${id}`);
+      dispatch({
+        type: types.VIDEO_DELETE,
+        payload: id
+      });
+    } catch (error) {
+      dispatch({
+        type: types.USER_FAILURE,
+        payload: error.response.data.error_msg
+      });
+    }
+  }, []);
+
+  const deleteScriptAction = useCallback(async (id) => {
+    dispatch({
+      type: types.SCRIPT_START
+    });
+    try {
+      await adminApi.delete(BE_API + `/video/scripts/${id}`);
+      dispatch({
+        type: types.SCRIPT_DELETE,
+        payload: id
+      });
+    } catch (error) {
+      dispatch({
+        type: types.SCRIPT_FAILURE,
         payload: error.response.data.error_msg
       });
     }
@@ -398,14 +514,19 @@ export const UserProvider = ({ children }) => {
         state,
         fetchSingleUser,
         fetchSingleVideo,
+        fetchSingleScript,
         fetchAdmins,
         fetchScripts,
         fetchUsersByMonth,
         editUserAction,
+        editVideoAction,
+        editScriptAction,
         changeUserPasswordAction,
         addUser,
         addVideo,
         deleteUserAction,
+        deleteVideoAction,
+        deleteScriptAction,
         changeUserStatus,
         changeVideoStatus,
         fetchVideos,

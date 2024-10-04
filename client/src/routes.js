@@ -5,6 +5,7 @@ import UserListPage from './components/dashboard/UserListPage';
 import AdminListPage from './components/dashboard/AdminListPage';
 import SingleUser from './components/dashboard/SingleUser/SingleUser';
 import SingleVideo from './components/dashboard/SingleVideo/SingleVideo';
+import SingleScript from './components/dashboard/SingleScript/SingleScript';
 import LoginForm from './components/auth/Login';
 import checkAdminAuth from './helpers/AdminAuth';
 import AddNewUser from './components/dashboard/AddNewUser';
@@ -73,6 +74,11 @@ const BaseRoute = () => (
       exact
       path="/dashboard/video/:id"
       component={SingleVideo}
+    />
+    <PrivateAdminRoute
+      exact
+      path="/dashboard/script/:id"
+      component={SingleScript}
     />
     <PrivateAdminRoute
       exact

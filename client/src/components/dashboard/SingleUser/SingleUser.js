@@ -57,7 +57,6 @@ function SingleUser(props) {
     deleteUserAction(id);
     props.history.push('/dashboard/users');
   };
-  console.log(user);
 
   return (
     <SingleUserStyled>

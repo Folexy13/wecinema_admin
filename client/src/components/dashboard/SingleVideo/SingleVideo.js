@@ -12,15 +12,13 @@ function SingleVideo(props) {
   const {
     state,
     fetchSingleVideo,
-    editUserAction,
-    deleteUserAction,
+    editVideoAction,
+    deleteVideoAction,
     changeUserPasswordAction
   } = useContext(UserContext);
   const [passwordFormVisibility, setpasswordFormVisibility] = useState(false);
 
-  const { loading, video, user } = state;
-
-  console.log(video);
+  const { loading, video } = state;
 
   // const [initialValues, setinitialValues] = useState(null);
   const handlePasswordChange = (data) => {
@@ -39,12 +37,17 @@ function SingleVideo(props) {
 
   const onFinish = (values) => {
     values._id = video._id;
-    delete values.password;
-    editUserAction(values);
+    const payload = {
+      ...video,
+      ...values,
+      theme: video.theme ?? [],
+      views: video.views ?? 0
+    };
+    editVideoAction(payload);
   };
 
   const onConfirmDelete = () => {
-    deleteUserAction(id);
+    deleteVideoAction(id);
     props.history.push('/dashboard/videos');
   };
 
@@ -53,7 +56,7 @@ function SingleVideo(props) {
       {video ? (
         <>
           <Typography>Edit {video.title}</Typography>
-          {video.role !== 'admin' ? (
+          {
             <Popconfirm
               title="Are you sure you want to delete this video?"
               onConfirm={onConfirmDelete}
@@ -65,11 +68,10 @@ function SingleVideo(props) {
                 Delete {video.title}
               </Button>
             </Popconfirm>
-          ) : null}
+          }
 
           <VideoForm
             video={video}
-            user={user}
             onFinish={onFinish}
             changePasswordModal={changePasswordModal}
             loading={loading}

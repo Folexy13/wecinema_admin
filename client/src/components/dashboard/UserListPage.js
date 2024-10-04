@@ -11,13 +11,15 @@ function UserListPage() {
 
   return (
     <div>
-      <Link
-        to="/dashboard/add-new-user"
-        className="btn btn-primary float-right cursor-pointer mb-2 "
-      >
-        Add new user
-      </Link>
-      {!loading ? (
+      {users && (
+        <Link
+          to="/dashboard/add-new-user"
+          className="btn btn-primary float-right cursor-pointer mb-2 "
+        >
+          Add new user
+        </Link>
+      )}
+      {!loading && users ? (
         <UserTable data={users} />
       ) : (
         <CustomLoader text={'Getting users from DB! Hold on gee...'} />

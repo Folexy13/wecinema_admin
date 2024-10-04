@@ -1,24 +1,25 @@
-import React, { useRef } from 'react';
-import { Row, Col, Upload } from 'antd';
+import React, { useState } from 'react';
+import { Row, Col } from 'antd';
 import { Link } from 'react-router-dom';
-import { Form, Input, Button, Select, Switch, Tooltip } from 'antd';
-import {
-  UserOutlined,
-  LockOutlined,
-  QuestionCircleOutlined,
-  VideoCameraOutlined,
-  TableOutlined,
-  UploadOutlined
-} from '@ant-design/icons';
+import { Form, Input, Button, Select } from 'antd';
+
+import ReactQuill from 'react-quill'; // Import the rich text editor
+import 'react-quill/dist/quill.snow.css'; // Import the Quill styles
+import { VideoCameraOutlined, TableOutlined } from '@ant-design/icons';
 import { Option } from 'antd/lib/mentions';
 
-function ScriptForm({ onFinish, loading, scripts }) {
+function ScriptForm({ onFinish, loading, script }) {
+  const [editorContent, setEditorContent] = useState(script?.script || '');
+
+  const handleEditorChange = (content) => {
+    setEditorContent(content);
+  };
   return (
     <>
       <Form
         name="video_details_form"
         className="login-form"
-        initialValues={scripts}
+        initialValues={script}
         onFinish={onFinish}
         layout="vertical"
         size="large"
@@ -53,9 +54,11 @@ function ScriptForm({ onFinish, loading, scripts }) {
               ]}
               name="script"
             >
-              <Input.TextArea
-                prefix={<TableOutlined className="site-form-item-icon" />}
-                placeholder="Lorem description"
+              <ReactQuill
+                theme="snow"
+                value={editorContent}
+                onChange={handleEditorChange}
+                placeholder="Write your script here..."
               />
             </Form.Item>
           </Col>
@@ -92,8 +95,6 @@ function ScriptForm({ onFinish, loading, scripts }) {
                 prefix={<TableOutlined className="site-form-item-icon" />}
                 type="text"
                 placeholder="admin"
-                value={'admin'}
-                readOnly={true}
               />
             </Form.Item>
           </Col>

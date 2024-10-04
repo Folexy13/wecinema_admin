@@ -6,6 +6,8 @@ import { UserContext } from '../../../context/userState/userContext';
 
 function VideoTable({ data }) {
   const { changeVideoStatus } = useContext(UserContext);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10); // Set your default page size
 
   const [loading, setLoading] = useState('');
   const handleSwitchChange = async (videoId, checked) => {
@@ -16,6 +18,9 @@ function VideoTable({ data }) {
       console.error('Error changing user status:', error);
     }
   };
+  const handleTableChange = (pagination) => {
+    setCurrentPage(pagination.current);
+  };
   useEffect(() => {
     setTimeout(() => {
       console.log('Loading stop');
@@ -25,14 +30,15 @@ function VideoTable({ data }) {
   const columns = [
     {
       title: 'ID',
-      dataIndex: '_id',
+      dataIndex: 'id',
+      render: (text, record, index) => (currentPage - 1) * pageSize + index + 1,
       responsive: ['lg']
     },
     {
       title: 'Title',
       dataIndex: 'title',
       render: (text, record) => (
-        <Link to={`/dashboard/video/${record._id}`}>{text}</Link>
+        <a href={`/dashboard/video/${record._id}`}>{text}</a>
       ),
       sorter: (a, b) => a.name.length - b.name.length,
       sortDirections: ['descend']
@@ -41,7 +47,7 @@ function VideoTable({ data }) {
     {
       title: 'Author',
       dataIndex: 'author',
-      render: (author) => author?.username || 'Unknown Author'
+      render: (author) => author?.username || 'Admin'
     },
     {
       title: 'Genre',
@@ -109,7 +115,7 @@ function VideoTable({ data }) {
           value: false
         }
       ],
-      onFilter: (value, record) => record.isActive === value,
+      onFilter: (value, record) => record.status === value,
       render: (isActive, record) => (
         <Switch
           checked={record?.status}
@@ -127,7 +133,8 @@ function VideoTable({ data }) {
         columns={columns}
         dataSource={data}
         style={{ clear: 'both' }}
-        // onChange={onChange}
+        pagination={{ pageSize }}
+        onChange={handleTableChange}
       />
     </>
   );

@@ -25,7 +25,7 @@ const userSchema = new Schema({
   date: {
     type: Date,
     default: Date.now,
-    expires: 43200
+    // expires: 43200
   }
 });
 

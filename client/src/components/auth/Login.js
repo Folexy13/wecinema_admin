@@ -28,9 +28,9 @@ const LoginForm = ({ history }) => {
   useEffect(() => {
     checkAdminAuth(token);
     if (token) {
-      history.push('/dashboard');
+      window.location.href = '/dashboard';
     }
-  }, [token, history]);
+  }, [token]);
 
   useEffect(() => {
     if (error) {
